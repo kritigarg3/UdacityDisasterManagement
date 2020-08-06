@@ -1,16 +1,5 @@
 ## UdacityDisasterManagement
 
-## Contents
-
-[**Installation** 1](#_Toc43740195)
-
-[**Project Motivation** 1](#_Toc43740196)
-
-[**File Descriptions** 1](#_Toc43740197)
-
-[**Results** 1](#_Toc43740198)
-
-[**Licensing, Authors, Acknowledgements** 1](#_Toc43740199)
 
 ## **Installation**
 
