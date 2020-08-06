@@ -48,13 +48,13 @@ def index():
     
     # extract data needed for visuals
     # TODO: Below is an example - modify to extract data for your own visuals
-    categ = {}
+    category = {}
     for i in df.columns[4:]:
-        categ[i] = df.loc[:,i].value_counts()
-    cat_names = list(pd.Series(categ).index)
+        category[i] = df.loc[:,i].value_counts()
+    cat_names = list(pd.Series(category).index)
     use_last2 = lambda x:x[:-2]
     cat_names = pd.Series(cat_names).apply(use_last2).values
-    cat_val = list(pd.Series(categ).values)
+    cat_val = list(pd.Series(category).values)
     catvalues1 = pd.DataFrame(cat_names)
     catvalues1['names'] = pd.DataFrame(cat_names)
     catvalues1['values'] = pd.DataFrame(cat_val)
@@ -62,51 +62,30 @@ def index():
     catvalues2.sort_values(['values'], ascending = True,axis = 0, inplace=True)
     values = catvalues2['values']
     names1 = catvalues2['names']
-    #colorcode = np.arange(4*len(names1))
     colorcode = np.arange(1*len(names1))
 
     
-    #Second figure
-    #import seaborn as sns
+    #first figure
+
     corr = df.iloc[:,4:].corr().values
-    cols1 = catvalues1['names'].values
-    #cols1 = df.columns.values
-    #corr = corr.to_json()
+    cols = catvalues1['names'].values
+
     
     
-    #Third figure
-    genre_counts = df.groupby('genre').count()['message']
-    genre_names = list(genre_counts.index)
+    #second figure
+    genre_count = df.groupby('genre').count()['message']
+    genre = list(genre_count.index)
     
-    #import plotly.graph_objects as go
+
     # create visuals
     graphs = [
-        {
-            'data': [
-                Bar(
-                    x=catvalues2['values'],
-                    y=names1,
-                    orientation='h',
-                    marker=dict(color=colorcode)
-                )
-            ],
 
-            'layout': {
-                'title': 'Distribution of Message Categories',
-                'yaxis': {
-                    'title': ""
-                },
-                'xaxis': {
-                    'title': "Count"
-                }
-            }
-        },
         {
             'data': [
                    g.Heatmap(
             z = corr,
-            y=cols1,
-            x=cols1,
+            y=cols,
+            x=cols,
             type = 'heatmap'
            )
              ],
@@ -123,8 +102,8 @@ def index():
          {
             'data': [
                 Bar(
-                    x=genre_counts,
-                    y=genre_names,
+                    x=genre_count,
+                    y=genre,
                     orientation='h',
                     marker=dict(color='blue')
                 )
