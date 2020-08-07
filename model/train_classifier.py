@@ -23,11 +23,20 @@ import sqlite3
 nltk.download(['punkt','wordnet','stopwords'])
 
 def load_data(database_filepath):
-    """loads the data and returns X and y variables for the analysis"""
+    
+    """Loads the data and returns X and y variables for the analysis.
+    
+    input:
+    database_filepath - string. Filepath for database containing the data
+    
+    output:
+    X - array. The text messages recieved
+    y - array. The binary value assigned to a category in which the messages are classified
+    category_names: the names of the categories
+    """
+    
     conn = sqlite3.connect(database_filepath)
     df = pd.read_sql('Select * from "Message_Categories"', conn)
-    df =df[df['related']!=2]
-    df =df.drop('child_alone', axis=1)
     X = df.message.values
     y = df.iloc[:,4:].values
     category_names = df.iloc[:,4:].columns
@@ -36,10 +45,18 @@ def load_data(database_filepath):
 
 
 def tokenize(text):
-    """Cleans the text for the analysis by normalizing, tokenizing and lemmatizing the text"""
+    
+    """Cleans the text for the analysis by normalizing, tokenizing and lemmatizing the text.
+    
+    input:
+    text - string. Each word in the message is a different input
+    
+    output:
+    clean_token - list. Normalized, tokenized and lemmatized text
+    """
     
     for word in text:
-        word = word.lower(
+        word = word.lower()
         word = re.sub(r"don't", 'do not', word)
         word = re.sub(r"aren't", 'are not', word)
         word = re.sub(r"doesn't", 'does not', word)
@@ -81,7 +98,12 @@ def tokenize(text):
 
 def build_model():
     """Builds a model to be applied on the clean data.
-    A pipeline is built for the model and through GridSearch, returns the model with best parameters"""
+    A pipeline is built for the model and through GridSearch, returns the model with best parameters.
+    
+    input: None
+    
+    output:
+    model: Returns the model with the best parameters chosen through GridSearch"""
             
     estimator=RandomForestClassifier()
     pipeline = Pipeline([
@@ -103,7 +125,19 @@ def build_model():
     return model
 
 def evaluate_model(model, X_test, y_test, category_names):
-    """Evaluates the model with the f1 score, recall score, accuracy and precision"""
+    
+    """Evaluates the model with the f1 score, recall score, accuracy and precision.
+    
+    Input:
+    model - the model with the best parameters
+    X_test - the independent variable of the test data
+    y_test - the dependent variable of the test data
+    category_names - the categories of the message for classification
+    
+    Output:
+    score_df - Dataframe. Dataframe contaning the evaluation results for each category
+    """
+    
     y_pred = model.predict_proba(X_test)
     y_pred = [(a>.5).astype(int) for a in y_pred]
     score_df = {}
@@ -126,7 +160,14 @@ def evaluate_model(model, X_test, y_test, category_names):
 
 
 def save_model(model, model_filepath):
-            """saves the model in a pickle file"""
+    
+    """Saves the model in a pickle file.
+    
+    input:
+    model - the model with the best parameters
+    model_filepath - String. filepath of the pickle file containing the model
+    
+    """
     filename = model_filepath
     pickle.dump(model, open(filename, 'wb'))
 
