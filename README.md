@@ -23,6 +23,16 @@ The datasets for this project (messages.csv and the categries.csv) were provided
 
 **run.py:** Takes the results of &#39;process\_data.py&#39;, and &#39;train\_classifier.py&#39; and creates a web application where one types in any message during disaster and a category is generated for the same.
 
+## **How to run**
+
+These files can be run in the terminal.
+1. To run ETL pipeline that cleans data and stores in database: 
+        python data/process_data.py data/disaster_messages.csv data/disaster_categories.csv data/DisasterResponse.db
+2. To run ML pipeline that trains classifier and saves:
+        python models/train_classifier.py data/DisasterResponse.db models/classifier.pkl
+3. To run the web app:
+    python run.py
+
 ## **Results**
 
 The main findings of the code can be found in the repository.
