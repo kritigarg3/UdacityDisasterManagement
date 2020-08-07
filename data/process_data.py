@@ -5,7 +5,15 @@ import pandas as pd
 
 def load_data(messages_filepath, categories_filepath):
     
-    """load the files"""
+    """Load the files.
+    
+    inputs:
+    messages_filepath - string. Filepath for csv containing messages dataset
+    categories_filepath - string. filepath for csv containing categories dataset
+    
+    output:
+    df - dataframe. dataframe containing merged merged content of messages and categories dataset
+    """
     messages = pd.read_csv(messages_filepath)
     categories = pd.read_csv(categories_filepath)
     df = messages.merge(categories, left_on='id', right_on='id')
@@ -13,7 +21,15 @@ def load_data(messages_filepath, categories_filepath):
     return df
 
 def clean_data(df):
-    """Cleans the data"""
+    
+    """Cleans the data.
+    
+    input: 
+    df - dataframe. dataframe containing merged merged content of messages and categories dataset
+    
+    output: dataframe. clean dataframe with different columns for each category
+    """
+    
     category_col = 'categories'
     categories = df[category_col].str.split(';', expand=True)
 
@@ -32,13 +48,21 @@ def clean_data(df):
     #check number of duplicates
     df[df.duplicated()].shape[0]
     df = df.drop_duplicates()
-    
+    df =df[df['related']!=2]
+    df =df.drop('child_alone', axis=1)
     return df
     
 def save_data(df, database_filename):
-    """saves the dataframe in a SQLite database"""
-   engine = create_engine('sqlite:///'+database_filename)
-   df.to_sql('Message_Categories', engine, index=False)  
+    
+    """Saves the dataframe in a SQLite database.
+    
+    Inputs:
+    df - dataframe. dataframe containing merged merged and cleaned content of messages and categories dataset with all the categories
+    database_filename - string. Name of the database where the file is stored
+    """
+    
+    engine = create_engine('sqlite:///'+database_filename)
+    df.to_sql('Message_Categories', engine, if_exists='replace', index=False)  
 
 
 def main():
