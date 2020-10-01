@@ -40,3 +40,4 @@ The main findings of the code can be found in the repository.
 ## **Licensing, Authors, Acknowledgements**
 
 Must give credit to Figure 8 and Udacity for the data. Feel free to use the code here as you would like!
+Github link: https://github.com/kritigarg3/UdacityDisasterManagement
